@@ -1,31 +1,72 @@
 '''
 RBI - Research, backtest, implement
 LLMs - RBI 
-'''
 
+git: https://github.com/moondevonyt/AI---LLMs-For-Automated-Trading
+'''
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain 
 import langchainkeys as l 
 import time 
 
-
 ###### RBI SYSTEM ########
 
 #### RESEARCH LLM ########
-# research trading strategies
-llm_research = OpenAI(openai_api_key=l.open_ai_key, temperature=0) # initialize openai LLM for the research
-
-research_template = """look at the recent market data for bitcoin and make a trading strategy for it. use {indicator} and 2 others of your choice. over the last {time_period} days """
-
+# Research trading strategies
+llm_research = OpenAI(openai_api_key=l.open_ai_key, temperature=0)
+research_template = """look at the recent market data for bitcoin and make a trading strategy for it. use {indicator} of your choice. over the last {time_period} days """
 research_prompt = PromptTemplate(template=research_template, input_variables=["indicator", "time_period"])
-
-# create an llmchain for research
 research_chain = LLMChain(prompt=research_prompt, llm=llm_research)
 
-# generate trading strategies 
-research_result = research_chain.run({"indicator": "RSI", "time_period": "30"})
+# Generate trading strategies 
+research_result = research_chain.run({"indicator": "any indicator", "time_period": "365"})
 
+# Retrieve the generated text
+trading_strategy = research_result
+
+print(trading_strategy)
+print('')
+print('done thinking of strategies... moving on to instructions for backtests...')
+print('')
+time.sleep(5)
+
+#### STRATEGY INSTRUCTIONS LLM ########
+# Generate step-by-step instructions for the trading strategy
+llm_instructions = OpenAI(openai_api_key=l.open_ai_key, temperature=0)
+instructions_template = """
+Based on the generated trading strategy:
+- Determine the entry condition.
+- Define the exit condition.
+- Specify the market stay-out condition.
+
+Trading Strategy:
+{trading_strategy}
+
+Entry Instructions:
+...
+
+Exit Instructions:
+...
+
+Market Stay-out Instructions:
+...
+"""
+instructions_prompt = PromptTemplate(template=instructions_template, input_variables=["trading_strategy"])
+instructions_chain = LLMChain(prompt=instructions_prompt, llm=llm_instructions)
+
+print('made it to line 53')
+# Generate instructions for the trading strategy
+instructions_result = instructions_chain.run({"trading_strategy": trading_strategy})
+step_by_step_outlines = [instructions_result]
+print(step_by_step_outlines)
+
+# Print the step-by-step outline
+for outline in step_by_step_outlines:
+    print(outline)
+
+# Print completion message
+print("\nAll done with the research and step-by-step instructions!")
 
 time.sleep(8756) # to not go passed
 
