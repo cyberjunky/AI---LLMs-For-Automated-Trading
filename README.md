@@ -1,4 +1,4 @@
-#Connecting Multiple LLMs to Trade For Me
+# Connecting Multiple LLMs to Trade For Me
 
 brought to you by Moon Dev: https://www.youtube.com/@moondevonyt
 
